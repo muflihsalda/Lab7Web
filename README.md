@@ -61,3 +61,113 @@ Membuat fitur administrasi untuk memanipulasi data artikel:
 
 **Hapus (Delete)**: Menghapus data artikel dari sistem.
 <img width="1362" height="534" alt="hapus_artikel" src="https://github.com/user-attachments/assets/40c99cbf-7d42-4e65-a395-2ca66fd0c896" />
+
+# Praktikum 3 - View Layout & View Cell (CodeIgniter 4)
+
+## Langkah-Langkah Pengerjaan
+
+### 1. Membuat Template Layout
+
+Pada tahap ini dibuat file:
+
+* `header.php`
+* `footer.php`
+
+Fungsi:
+
+* `header.php` digunakan untuk bagian atas (judul, navbar, CSS)
+* `footer.php` digunakan untuk bagian bawah (footer dan sidebar)
+
+Kemudian dipanggil pada setiap halaman menggunakan:
+
+```php
+<?= $this->include('template/header'); ?>
+<?= $this->include('template/footer'); ?>
+```
+
+---
+
+### 2. Membuat Struktur Layout
+
+Struktur halaman dibagi menjadi:
+
+* Header
+* Navigasi
+* Konten utama (`main`)
+* Sidebar (`aside`)
+* Footer
+
+Sehingga tampilan menjadi lebih rapi dan konsisten di setiap halaman.
+
+---
+
+### 3. Membuat View Cell
+
+View Cell digunakan untuk membuat komponen dinamis.
+
+File yang dibuat:
+
+* `app/Cells/ArtikelTerkini.php`
+
+Berfungsi untuk mengambil data artikel terbaru dari database:
+
+```php
+$artikel = $model->orderBy('id', 'DESC')->limit(5)->findAll();
+```
+
+---
+
+### 4. Membuat View untuk View Cell
+
+File:
+
+* `app/Views/artikel/terkini.php`
+
+Digunakan untuk menampilkan daftar artikel terbaru dalam bentuk list.
+
+---
+
+### 5. Menampilkan View Cell
+
+View Cell dipanggil pada bagian sidebar:
+
+```php
+<?= view_cell('App\\Cells\\ArtikelTerkini::render') ?>
+```
+
+Sehingga sidebar akan menampilkan artikel terbaru secara otomatis.
+
+---
+
+### 6. Integrasi dengan Halaman Artikel
+
+Pada file `index.php`, halaman utama artikel tetap menggunakan template:
+
+```php
+<?= $this->include('template/header'); ?>
+```
+
+dan
+
+```php
+<?= $this->include('template/footer'); ?>
+```
+
+Sedangkan sidebar diambil dari View Cell.
+
+---
+
+## Hasil Tampilan
+
+<img width="1120" height="646" alt="image" src="https://github.com/user-attachments/assets/08a70846-3674-4e9e-8b0f-2322098266f9" />
+
+Hasil dari praktikum ini adalah:
+
+* Tampilan website menjadi lebih rapi
+* Layout terbagi menjadi dua kolom (konten dan sidebar)
+* Sidebar menampilkan artikel terbaru secara dinamis
+* Tampilan sesuai dengan desain pada modul praktikum
+
+---
+
+
