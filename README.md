@@ -169,5 +169,131 @@ Hasil dari praktikum ini adalah:
 * Tampilan sesuai dengan desain pada modul praktikum
 
 ---
+# Praktikum 4 - Pagination & Pencarian Artikel (CodeIgniter 4)
+
+
+## Langkah-Langkah Pengerjaan
+
+### 1. Mengubah Controller
+
+File yang diubah:
+
+* `app/Controllers/Artikel.php`
+
+Pada function `index()`, ditambahkan fitur pencarian dan pagination:
+
+```php
+public function index()
+{
+    $model = new \App\Models\ArtikelModel();
+
+    $q = $this->request->getGet('q');
+
+    if ($q) {
+        $artikel = $model->like('judul', $q)
+                         ->paginate(5);
+    } else {
+        $artikel = $model->paginate(5);
+    }
+
+    return view('artikel/index', [
+        'title'   => 'Daftar Artikel',
+        'artikel' => $artikel,
+        'pager'   => $model->pager,
+        'q'       => $q
+    ]);
+}
+```
+
+---
+
+### 2. Menambahkan Form Pencarian
+
+File yang diubah:
+
+* `app/Views/artikel/index.php`
+
+Ditambahkan form untuk mencari artikel:
+
+```php
+<form method="get">
+    <input type="text" name="q" value="<?= $q; ?>" placeholder="Cari artikel...">
+    <button type="submit">Cari</button>
+</form>
+```
+
+---
+
+### 3. Menampilkan Hasil Pencarian
+
+Masih di file yang sama, ditambahkan informasi keyword:
+
+```php
+<?php if ($q): ?>
+    <p>Hasil pencarian untuk: <b><?= $q; ?></b></p>
+<?php endif; ?>
+```
+
+---
+
+### 4. Menambahkan Pagination
+
+Pagination ditampilkan di bagian bawah daftar artikel:
+
+```php
+<?= $pager->links(); ?>
+```
+
+---
+
+### 5. Menambahkan Styling Pagination
+
+File yang diubah:
+
+* `public/style.css`
+
+Ditambahkan CSS agar pagination tampil lebih rapi:
+
+```css
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    margin-top: 20px;
+}
+
+.pagination li {
+    margin-right: 5px;
+}
+
+.pagination li a,
+.pagination li span {
+    display: block;
+    padding: 6px 12px;
+    background: #2f5fa5;
+    color: #fff;
+    text-decoration: none;
+    border-radius: 3px;
+}
+
+.pagination li.active span {
+    background: #1d3c73;
+}
+```
+
+---
+
+## Hasil Tampilan
+
+<img width="948" height="581" alt="image" src="https://github.com/user-attachments/assets/3b27efd2-8483-4495-bf77-74f455a814cb" />
+
+Hasil dari praktikum ini:
+
+* Artikel ditampilkan per halaman (pagination)
+* Terdapat tombol navigasi halaman (1, 2, 3, dst)
+* Pengguna dapat mencari artikel berdasarkan judul
+* Tampilan lebih rapi dan interaktif
+
+---
 
 
