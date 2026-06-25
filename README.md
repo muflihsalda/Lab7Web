@@ -1,5 +1,5 @@
 # Lab7Web 
-# Laporan Praktikum Pemrograman Web2 (1-4)
+# Laporan Praktikum Pemrograman Web2 
 
 **Nama:** Muflih Salda Maulana  
 **NIM:** 312410527 
