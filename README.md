@@ -296,4 +296,87 @@ Hasil dari praktikum ini:
 
 ---
 
+## Praktikum 5 & 6
+Mengelola data dalam jumlah besar dan mendalami arsitektur relasional database.
+* **Penjelasan Teknis:** * **Pagination & Search:** Memanfaatkan library bawaan CI4 `$builder->paginate()` untuk membatasi data per halaman, dan `$builder->like()` untuk pencarian berbasis Query Builder.
+  * **Relasi Tabel:** Membuat relasi *One-to-Many* antara tabel `kategori` dan `artikel`. Pengambilan data dilakukan dengan fungsi `->join()` agar nama kategori bisa tampil bersama data artikel tanpa perlu query berulang.
+* **Tampilan Form dengan Kategori:**
+![Praktikum 6](https://github.com/ridhofebriann/lab7web_praktikum/blob/main/praktikum5-6.png?raw=true)
+
+## Praktikum 7: Upload File Gambar
+* **Penjelasan Teknis:** Memodifikasi tag `<form>` dengan atribut `enctype="multipart/form-data"` agar dapat memproses file biner. Di sisi Controller, file gambar ditangkap menggunakan `$this->request->getFile()`, divalidasi, lalu dipindahkan (move) ke direktori `public/gambar`.
+* **Tampilan Form Upload:**
+![Praktikum 7](https://github.com/ridhofebriann/lab7web_praktikum/blob/main/praktikum7.png?raw=true)
+
+---
+
+##  FASE 2: INTERAKTIVITAS DENGAN AJAX
+
+## Praktikum 8 & 9: Implementasi AJAX, Pagination, & Search
+Mengubah metode *reload* halaman tradisional menjadi *Asynchronous* (tanpa muat ulang).
+* **Penjelasan Teknis & Alur Kerja:** Pencarian dan pemuatan halaman dilakukan melalui **jQuery AJAX**. Saat *user* mengetik pencarian, JavaScript mengirim request ke CodeIgniter. Di sisi server, method `admin_index()` mengecek apakah request tersebut adalah AJAX menggunakan `$this->request->isAJAX()`. Jika ya, server mengembalikan data dalam format **JSON** (bukan me-render View HTML). JavaScript kemudian menangkap JSON tersebut dan menggambar ulang (`render`) isi tabel secara *real-time*.
+* **Tampilan Search & Pagination AJAX:**
+![Praktikum 9](https://github.com/ridhofebriann/lab7web_praktikum/blob/main/praktikum8-9.png?raw=true)
+
+---
+
+##  FASE 3: REST API, SINGLE PAGE APPLICATION (VueJS) & SECURITY
+
+## Praktikum 10: Pembuatan RESTful API CodeIgniter
+Mengubah arsitektur aplikasi menjadi penyedia layanan data (REST Server).
+* **Penjelasan Teknis & Alur Kerja:** Membuat controller `Post.php` yang meng-extend `ResourceController` dan memanfaatkan `ResponseTrait` untuk mempermudah format balasan berupa JSON . Rute API didaftarkan secara otomatis menggunakan `$routes->resource('post');` yang langsung menghasilkan *endpoint* untuk metode GET, POST, PUT, dan DELETE. Pengujian fungsionalitas CRUD API dilakukan secara terpisah tanpa antarmuka web menggunakan aplikasi REST Client seperti **Postman** [cite: 1804-1805, 1965-1966].
+* **Tampilan Uji Coba API (Postman):**
+<img width="1365" height="721" alt="image" src="https://github.com/user-attachments/assets/1b7fd59f-ad74-428e-8a9d-c0c8b9156f5f" />
+
+<img width="910" height="456" alt="image" src="https://github.com/user-attachments/assets/b08add97-19b3-41d8-ae05-2ce46150cdd3" />
+
+
+<img width="806" height="438" alt="image" src="https://github.com/user-attachments/assets/d4a71b5d-5263-4bb6-bf46-c91c1ac3b1a7" />
+
+
+<img width="809" height="479" alt="image" src="https://github.com/user-attachments/assets/b711a968-608a-4bf9-80d3-c8c8b1319d47" />
+
+
+## Praktikum 11 & 12: Integrasi VueJS dan Vue Router (SPA)
+Memisahkan sepenuhnya *Frontend* (VueJS) dan *Backend* (CodeIgniter 4 REST API).
+* **Penjelasan Teknis:** Aplikasi diubah menjadi *Single Page Application* (SPA) menggunakan **Vue Router**. UI dipecah menjadi komponen modular (`Home.js`, `Artikel.js`, `About.js`). Vue Router bekerja dengan menukar (me-mount) komponen-komponen tersebut ke dalam tag `<router-view>` berdasarkan URL yang diakses. Hal ini membuat perpindahan antar halaman menjadi instan seperti aplikasi *mobile*, sementara data CRUD ditarik melalui REST API (`/post`) menggunakan **Axios**.
+* **Tampilan Menu About SPA:**
+<img width="795" height="473" alt="image" src="https://github.com/user-attachments/assets/8fd6d83b-e369-4ec9-90dd-e4086f773e8e" />
+
+
+## Praktikum 13: VueJS Autentikasi & Navigation Guards
+Menerapkan perlindungan sisi klien (*Client-Side Security*).
+* **Penjelasan Teknis:** Menggunakan fungsi `router.beforeEach` pada Vue Router yang bertindak sebagai "Satpam Frontend". Setiap kali pengguna berpindah rute yang memiliki label `requiresAuth: true`, sistem akan mengecek keberadaan token login di `localStorage`. Jika tidak ada, pengguna diblokir dan diarahkan ke form Login.
+* **Tampilan Form Login VueJS:**
+<img width="1327" height="549" alt="image" src="https://github.com/user-attachments/assets/51d8558f-3f47-4d33-af97-2cea5fb3c166" />
+
+## Praktikum 14: Keamanan API, Token Auth, & Axios Interceptors
+Menerapkan perlindungan sisi server (*Server-Side Security*) berlapis untuk mencegah *bypass* database.
+* **Penjelasan Teknis & Alur Kerja:**
+  * **CodeIgniter Filters (Backend):** Dibuat filter `ApiAuthFilter` yang mencegat request POST/PUT/DELETE. Server mengecek apakah *Request Header* membawa `Authorization: Bearer <token>`. Jika tidak valid, server mengembalikan respon `401 Unauthorized`.
+  * **Axios Interceptors (Frontend):** Bertindak sebagai "kurir rahasia". Daripada menyisipkan token secara manual di setiap fungsi CRUD, `axios.interceptors.request` mencegat setiap request keluar dari VueJS dan secara otomatis menyuntikkan *Token* ke dalam *HTTP Header* sebelum dikirim ke server.
+
+** Hasil Uji Coba Keamanan Lapis Ganda:**
+* **Bukti API Ditolak via Postman (Tanpa Token):** Server CI4 berhasil memblokir akses ilegal.
+<img width="1012" height="474" alt="image" src="https://github.com/user-attachments/assets/f5433bd9-00b2-4663-a7fa-cc6aa46fda4e" />
+
+* **Bukti API Diterima via VueJS (Dengan Interceptors):** Akses diterima secara transparan berkat token otomatis.
+<img width="1274" height="686" alt="image" src="https://github.com/user-attachments/assets/8f45369f-b83b-458d-8b7e-4f403b070628" />
+
+
+---
+
+## Kesimpulan Analisis Keamanan (Client-Side vs Server-Side)
+Dari hasil implementasi di atas, terdapat perbedaan mendasar pada sistem keamanan yang dibangun:
+1. **Navigation Guards (VueJS / Client-Side):** Hanya mengunci antarmuka (UI). Mencegah user awam melihat halaman web tertentu, namun rentan dibypass oleh pihak yang menembak langsung ke URL API.
+2. **Filters & Token Auth (CodeIgniter / Server-Side):** Mengunci akses data inti di *Backend*. Meskipun UI frontend berhasil dibypass atau diserang via aplikasi pihak ketiga (seperti Postman), *database* tetap aman karena server secara ketat menolak request tanpa Token yang sah.
+
+Penggabungan keduanya menghasilkan aplikasi web modern yang responsif namun memiliki benteng keamanan yang kokoh.
+
+---
+*Muflih Salda Maulana - Teknik Informatika - Universitas Pelita Bangsa*
+
+
+
+
 
